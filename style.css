@@ -1,0 +1,100 @@
+* {
+	margin: 0;
+	color: #ffffff;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('fonts/Inter/Inter.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+	background-color: #191919;
+	font-family: 'Inter';
+}
+
+a {
+	text-decoration: none;
+}
+
+#nav {
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	border-bottom: 1px solid #333;
+}
+
+.logo {
+	font-size: 24px;
+	transition: transform 1s ease;
+}
+
+.logo:hover {
+	transform: scale(1.1);
+}
+
+.nav-items {
+	font-size: 16px;
+}
+
+.nav-items a {
+	padding: 3px;
+	transition: transform 1s ease;
+}
+
+.nav-items a:hover {
+	color: lightblue;
+}
+
+strong {
+	color: lightblue;
+}
+
+#nav {
+	display: flex;
+	justify-content: space-between;
+	padding: 24px;
+}
+
+#main {
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	height: 80vh;
+}
+
+#title {
+	display: flex;
+	justify-content: center;
+	font-size: 2.2em;
+	font-weight: 800;
+	margin-bottom: 30px;
+}
+
+#choice-cont {
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.card {
+	width: 21.25em;
+	box-shadow: 0 5px 25px gray;
+	border-radius: 25px;
+	padding: 25px;
+	margin: 15px;
+	transition: transform 1s ease;
+}
+
+.card:hover {
+	transform: scale(1.1);
+}
+
+.card .img {
+	font-size: 34px;
+}
