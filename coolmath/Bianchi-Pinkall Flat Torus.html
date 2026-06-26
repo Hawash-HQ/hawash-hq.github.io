@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bianchi-Pinkall Flat Torus</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            color: #ffffff;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas3d"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas3d');
+        const ctx = canvas.getContext('2d');
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+
+
+        window.addEventListener('resize', resize);
+        resize();
+
+
+
+
+        const points = [];
+        const slices = 60;
+        const stacks = 60;
+
+
+        for (let i = 0; i <= slices; i++) {
+            const u = (i / slices) * 2 * Math.PI;
+            points[i] = [];
+            for (let j = 0; j <= stacks; j++) {
+                const v = (j / stacks) * 2 * Math.PI;
+
+                const x1 = Math.cos(u) * Math.cos(v);
+                const x2 = Math.sin(u) * Math.cos(v);
+                const x3 = Math.cos(u) * Math.sin(v);
+                const x4 = Math.sin(u) * Math.sin(v);
+
+                const denom = 1.0 - x4 * 0.95; 
+
+                const x = x1 / denom;
+                const y = x2 / denom;
+                const z = x3 / denom;
+
+                points[i][j] = { x: x * 1.5, y: y * 1.5, z: z * 1.5 };
+            }
+        }
+
+        let angleX = 0;
+        let angleY = 0;
+
+        function draw() {
+            ctx.fillStyle = '#050505';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const projectedPoints = [];
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const fov = 400;
+
+            // حسابات الجيب والجيب تمام للتدوير لتوفير الأداء
+            const cosX = Math.cos(angleX);
+            const sinX = Math.sin(angleX);
+            const cosY = Math.cos(angleY);
+            const sinY = Math.sin(angleY);
+
+            // تدوير وإسقاط كل النقاط
+            for (let i = 0; i <= slices; i++) {
+                projectedPoints[i] = [];
+                for (let j = 0; j <= stacks; j++) {
+                    const p = points[i][j];
+
+                    // التدوير حول محور Y
+                    let x = p.x * cosY - p.z * sinY;
+                    let z = p.x * sinY + p.z * cosY;
+
+                    // التدوير حول محور X
+                    let y = p.y * cosX - z * sinX;
+                    z = p.y * sinX + z * cosX;
+
+                    // إزاحة المجسم للخلف في عمق الشاشة (Z-axis) حتى لا يلتصق بالكاميرا
+                    const distance = 4;
+                    z += distance;
+
+                    // إسقاط المنظور الثلاثي الأبعاد إلى ثنائي الأبعاد (3D to 2D Projection)
+                    const screenX = (x * fov) / z + cx;
+                    const screenY = (y * fov) / z + cy;
+
+                    projectedPoints[i][j] = { x: screenX, y: screenY };
+                }
+            }
+
+            // رسم الخطوط (الهيكل الشبكي Wireframe)
+            ctx.strokeStyle = 'rgba(0, 255, 200, 0.4)';
+            ctx.lineWidth = 1;
+
+            for (let i = 0; i < slices; i++) {
+                for (let j = 0; j < stacks; j++) {
+                    const p1 = projectedPoints[i][j];
+                    const p2 = projectedPoints[i + 1][j];
+                    const p3 = projectedPoints[i][j + 1];
+
+                    // رسم الخطوط الأفقية
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+
+                    // رسم الخطوط الرأسية
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p3.x, p3.y);
+                    ctx.stroke();
+                }
+            }
+
+            // تحديث زوايا التدوير للفريم القادم
+            angleX += 0.005;
+            angleY += 0.007;
+
+            requestAnimationFrame(draw);
+        }
+
+        // بدء دالة الرسم والتكرار
+        draw();
+    </script>
+</body>
+</html>

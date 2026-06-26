@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body style="margin:0; overflow:hidden; background:#000;">
+<canvas id="c"></canvas>
+<script>
+    const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const blobs = [{x:100, y:100, vx:2, vy:3}, {x:200, y:200, vx:-2, vy:1}, {x:300, y:150, vx:1, vy:-2}];
+
+    function draw() {
+        ctx.fillStyle = '#000'; ctx.fillRect(0,0, canvas.width, canvas.height);
+        blobs.forEach(b => {
+            b.x += b.vx; b.y += b.vy;
+            if(b.x < 0 || b.x > canvas.width) b.vx *= -1;
+            if(b.y < 0 || b.y > canvas.height) b.vy *= -1;
+            
+            // رسم كل دائرة مع تأثير ضبابي (Blur) لدمجها
+            let grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, 100);
+            grad.addColorStop(0, 'rgba(0, 200, 255, 1)');
+            grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = grad;
+            ctx.globalCompositeOperation = 'screen';
+            ctx.beginPath(); ctx.arc(b.x, b.y, 100, 0, Math.PI*2); ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+</script>
+</body>
+</html>

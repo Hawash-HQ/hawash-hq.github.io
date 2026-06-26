@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Torus Knot Surface</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas3d"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas3d');
+        const ctx = canvas.getContext('2d');
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const slices = 100;
+        const stacks = 20;
+        const points = [];
+
+
+
+        for (let i = 0; i <= slices; i++) {
+            const t = (i / slices) * Math.PI * 2;
+
+
+            const x = (2 + Math.cos(3 * t)) * Math.cos(2 * t);
+            const y = (2 + Math.cos(3 * t)) * Math.sin(2 * t);
+            const z = Math.sin(3 * t);
+            
+            points[i] = [];
+            for (let j = 0; j <= stacks; j++) {
+                const angle = (j / stacks) * Math.PI * 2;
+                const r = 0.3;
+
+
+                points[i][j] = { x: x + r * Math.cos(angle), y: y + r * Math.sin(angle), z: z };
+            }
+        }
+
+
+
+        let angleX = 0, angleY = 0;
+
+        function draw() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const fov = 300;
+            const scale = 150;
+
+            for (let i = 0; i < slices; i++) {
+                for (let j = 0; j < stacks; j++) {
+                    const p = points[i][j];
+                    
+
+
+                    let x = p.x * Math.cos(angleY) - p.z * Math.sin(angleY);
+                    let z = p.x * Math.sin(angleY) + p.z * Math.cos(angleY);
+                    let y = p.y * Math.cos(angleX) - z * Math.sin(angleX);
+                    z = p.y * Math.sin(angleX) + z * Math.cos(angleX) + 6;
+
+                    const screenX = (x * scale * fov) / (z * 100) + cx;
+                    const screenY = (y * scale * fov) / (z * 100) + cy;
+
+
+                    ctx.fillStyle = `hsl(${i * 3.6}, 80%, 50%)`;
+                    ctx.fillRect(screenX, screenY, 2, 2);
+                }
+            }
+
+            angleX += 0.01;
+            angleY += 0.01;
+            requestAnimationFrame(draw);
+        }
+        draw();
+
+        
+    </script>
+</body>
+</html>

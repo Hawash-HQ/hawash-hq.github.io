@@ -3,6 +3,12 @@
 	color: #ffffff;
 }
 
+img {
+	-ms-interpolation-mode: nearest-neighbor;
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
+}
+
 @font-face {
     font-family: 'Inter';
     src: url('fonts/Inter/Inter.ttf');
@@ -25,6 +31,7 @@ a {
 	top: 0;
 	z-index: 1000;
 	border-bottom: 1px solid #333;
+	background-color: #191919;
 }
 
 .logo {
@@ -67,6 +74,11 @@ strong {
 	height: 80vh;
 }
 
+.scrollable {
+	padding-top: 200px;
+	min-height: calc(100vh - 100px);
+}
+
 #title {
 	display: flex;
 	justify-content: center;
@@ -83,12 +95,15 @@ strong {
 }
 
 .card {
-	width: 21.25em;
-	box-shadow: 0 5px 25px gray;
-	border-radius: 25px;
-	padding: 25px;
-	margin: 15px;
-	transition: transform 1s ease;
+    width: 21.25em;
+    box-shadow: 0 5px 25px gray;
+    border-radius: 25px;
+    padding: 25px;
+    margin: 15px;
+    transition: transform 1s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .card:hover {
