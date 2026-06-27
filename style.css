@@ -75,8 +75,20 @@ strong {
 }
 
 .scrollable {
-	padding-top: 200px;
-	min-height: calc(100vh - 100px);
+	margin-top: 250px;
+}
+
+.scrollable-low {
+	margin-top: 50px;
+}
+
+@media (max-width: 500px) {
+	.scrollable {
+		margin-top: 900px;
+	}
+	.scrollable-low {
+		margin-top: 150px;
+	}
 }
 
 #title {
